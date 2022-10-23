@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Root from "./Root";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Home from "./components/Home";
+import Signup from "./components/signup/Signup";
+import Login from "./components/login/Login";
+import Dashboard from "./components/dashboard/Dashboard";
+
+import axios from "axios";
+axios.defaults.baseURL = "http://127.0.0.1:8000";
+axios.defaults.headers['Content-Type'] = 'application/json'
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Root>
+          <Routes>
+            <Route path="/signup" element={<Signup/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/dashboard" element={<Dashboard/>} />
+            <Route exact path="/" element={<Home/>} />
+            <Route path="*" element={<Navigate to='/' />} />
+          </Routes>
+        </Root>
+        <ToastContainer hideProgressBar={true} newestOnTop={true} />
+      </div>
+    );
+  }
 }
 
 export default App;
