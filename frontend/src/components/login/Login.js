@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux"; // new import
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams  } from "react-router-dom";
 import { login } from "./LoginActions.js";
 import {
   Container,
@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   const onLoginClick = () => {
-    dispatch(login(info, navigate, "/dashboard"));
+    dispatch(login(info, navigate, '/dashboard'));
   };
 
   return (

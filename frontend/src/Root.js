@@ -17,7 +17,7 @@ const Root = ({ children }) => {
   }
   if (!isEmpty(localStorage.getItem("user"))) {
     const user = JSON.parse(localStorage.getItem("user"));
-    store.dispatch(setCurrentUser(user, ""));
+    store.dispatch(setCurrentUser(user, undefined, ""));
   }
 
   return (

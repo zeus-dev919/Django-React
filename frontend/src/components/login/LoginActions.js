@@ -11,7 +11,7 @@ export const login = (userData, navigate, redirectTo) => dispatch => {
       const { auth_token } = response.data;
       setAxiosAuthToken(auth_token);
       dispatch(setToken(auth_token));
-      navigate(redirectTo);
+      dispatch(getCurrentUser(navigate, redirectTo));
     })
     .catch(error => {
       dispatch(unsetCurrentUser());
@@ -19,7 +19,7 @@ export const login = (userData, navigate, redirectTo) => dispatch => {
     });
 };
 
-export const getCurrentUser = redirectTo => dispatch => {
+export const getCurrentUser = (navigate, redirectTo) => dispatch => {
   axios
     .get("/api/v1/users/me/")
     .then(response => {
@@ -27,7 +27,7 @@ export const getCurrentUser = redirectTo => dispatch => {
         username: response.data.username,
         email: response.data.email
       };
-      dispatch(setCurrentUser(user, redirectTo));
+      dispatch(setCurrentUser(user, navigate, redirectTo));
     })
     .catch(error => {
       dispatch(unsetCurrentUser());
@@ -35,16 +35,17 @@ export const getCurrentUser = redirectTo => dispatch => {
     });
 };
 
-export const setCurrentUser = (user, redirectTo) => dispatch => {
+export const setCurrentUser = (user, navigate, redirectTo) => dispatch => {
   localStorage.setItem("user", JSON.stringify(user));
   dispatch({
     type: SET_CURRENT_USER,
     payload: user
   });
 
-  console.log("set user" + redirectTo);
-  if (redirectTo !== "") {
-    dispatch(push(redirectTo));
+
+  if (navigate !== undefined && redirectTo !== "") {
+    console.log('navigating')
+    navigate(redirectTo)
   }
 };
 
@@ -66,12 +67,12 @@ export const unsetCurrentUser = () => dispatch => {
   });
 };
 
-export const logout = () => dispatch => {
+export const logout = (navigate) => dispatch => {
   axios
     .post("/api/v1/token/logout/")
     .then(response => {
       dispatch(unsetCurrentUser());
-      dispatch(push("/"));
+      navigate('/')
       toast.success("Logout successful.");
     })
     .catch(error => {
